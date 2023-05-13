@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TrackingUserApp</string>
+    <string name="version_code">Version 1.0.0</string>
 </resources>

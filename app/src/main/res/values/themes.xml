@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.TrackingUserApp" parent="Base.Theme.TrackingUserApp" />
+
+    <style name="CustomBlueThem" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#03A9F4</item>
+        <item name="colorPrimaryVariant">#EDEDED</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#03A9F4</item>
+    </style>
 </resources>
