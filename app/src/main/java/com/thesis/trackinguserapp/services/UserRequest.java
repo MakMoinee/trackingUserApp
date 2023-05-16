@@ -1,6 +1,7 @@
 package com.thesis.trackinguserapp.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -72,7 +73,12 @@ public class UserRequest {
                         listener.onSuccessUser(users);
                     }
                 })
-                .addOnFailureListener(e -> listener.onError());
+                .addOnFailureListener(e -> {
+                    if (e != null) {
+                        Log.e("ERROR_CREATE_ACCOUNT", e.getLocalizedMessage());
+                    }
+                    listener.onError();
+                });
     }
 }
 
