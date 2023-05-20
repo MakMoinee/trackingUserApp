@@ -72,12 +72,9 @@ public class GoogleSignInActivity extends AppCompatActivity {
                                 users.setPassword("default");
                                 request.getLogin(users, new FirebaseListener() {
                                     @Override
-                                    public void onSuccessListOfUsers(List<Users> usersList) {
+                                    public void onSuccessUser(Users uu) {
                                         pdLoad.dismiss();
-                                        for (Users u : usersList) {
-                                            new MyUserPref(GoogleSignInActivity.this).storeLogin(u);
-                                            break;
-                                        }
+                                        new MyUserPref(GoogleSignInActivity.this).storeLogin(uu);
                                         finish();
                                     }
 

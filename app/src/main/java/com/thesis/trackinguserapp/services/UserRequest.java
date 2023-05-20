@@ -31,7 +31,6 @@ public class UserRequest {
     public void getLogin(Users users, FirebaseListener listener) {
         fs.collection("users")
                 .whereEqualTo("email", users.getEmail())
-                .whereEqualTo("password", users.getPassword())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
@@ -43,16 +42,15 @@ public class UserRequest {
                                 Users u = documentSnapshot.toObject(Users.class);
                                 if (u != null) {
                                     u.setDocID(documentSnapshot.getId());
-                                    usersList.add(u);
+                                    listener.onSuccessUser(u);
+                                    break;
+                                }else{
+                                    listener.onError();
+                                    break;
                                 }
                             }
                         }
 
-                        if (usersList.size() > 0) {
-                            listener.onSuccessUser(usersList.get(0));
-                        } else {
-                            listener.onError();
-                        }
                     }
                 })
                 .addOnFailureListener(e -> listener.onError());

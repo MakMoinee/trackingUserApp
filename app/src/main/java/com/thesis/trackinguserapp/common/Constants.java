@@ -15,4 +15,6 @@ public class Constants {
             "\n" +
             "We understand that getting started with a new app can be overwhelming, but we are here to help you every step of the way. Our app has a user-friendly interface, and you will find it easy to navigate around. If you need any assistance or have any questions, please do not hesitate to contact our support team at %s.";
     public static final String welcomeEmailSubject = "Welcome to Tracking User App";
+
+    public static final String termsAndConditionURL = "https://www.app-privacy-policy.com/live.php?token=gPM0Pf2NMlBnxJNh1S19Ffo5cDD7TTwI";
 }

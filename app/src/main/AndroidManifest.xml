@@ -35,6 +35,13 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".DevicesActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Material3.DayNight" />
+
+        <activity
             android:name=".GoogleSignInActivity"
             android:exported="true"
             android:screenOrientation="portrait"

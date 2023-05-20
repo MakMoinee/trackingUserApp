@@ -1,5 +1,6 @@
 package com.thesis.trackinguserapp.common;
 
+import com.thesis.trackinguserapp.models.Devices;
 import com.thesis.trackinguserapp.models.Users;
 
 import java.util.HashMap;
@@ -13,6 +14,16 @@ public class MapForm {
         params.put("middleName", users.getMiddleName());
         params.put("lastName", users.getLastName());
         params.put("password", users.getPassword());
+
+        return params;
+    }
+
+    public static Map<String, Object> getDeviceMap(Devices devices){
+        Map<String, Object> params = new HashMap<>();
+        params.put("deviceID", devices.getDeviceID());
+        params.put("deviceUserID", devices.getDeviceUserID());
+        params.put("userID", devices.getUserID());
+        params.put("dateCreated", devices.getDateCreated());
 
         return params;
     }

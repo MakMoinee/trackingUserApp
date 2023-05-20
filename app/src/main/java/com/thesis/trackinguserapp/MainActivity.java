@@ -28,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
     private void setViews() {
         Users users = new MyUserPref(MainActivity.this).getUsers();
         if (users != null) {
-            if (users.getDocID()!=null) {
-                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                startActivity(intent);
-                finish();
+            if (users.getDocID() != null) {
+                if (users.getDocID() != "") {
+                    Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         }
     }
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Boolean isLogin = new MyUserPref(MainActivity.this).isLoggedIn();
-        if (isLogin) {
+        Users users = new MyUserPref(MainActivity.this).getUsers();
+        if (users != null) {
+            if (users.getDocID() == null || users.getDocID().equals("")) {
+                return;
+            }
             Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
             startActivity(intent);

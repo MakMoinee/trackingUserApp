@@ -14,5 +14,9 @@ public interface FirebaseListener {
 
     }
 
+    default <T> void onSuccessAny(T any){
+
+    }
+
     void onError();
 }

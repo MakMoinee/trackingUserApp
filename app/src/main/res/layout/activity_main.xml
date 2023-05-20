@@ -18,7 +18,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:fontFamily="@font/doctor_glitch"
-            android:text="TRACKING APP"
+            android:text="3-J Distress Device"
             android:textSize="25sp" />
 
         <androidx.cardview.widget.CardView

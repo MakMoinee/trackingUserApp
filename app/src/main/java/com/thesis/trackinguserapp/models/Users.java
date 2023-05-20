@@ -65,7 +65,7 @@ public class Users {
         }
 
         public Users build() {
-            return new Users();
+            return new Users(this);
         }
     }
 }
