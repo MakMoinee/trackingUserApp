@@ -31,6 +31,9 @@ public class HomeFragment extends Fragment {
 
     OptionsAdapter adapter;
 
+    final int DEVICES = 0;
+    final int HISTORY = 1;
+
 
     public HomeFragment(Context mContext, FragmentListener fragmentListener) {
         this.mContext = mContext;
@@ -58,7 +61,13 @@ public class HomeFragment extends Fragment {
         optionsList.add(options);
 
         adapter = new OptionsAdapter(mContext, optionsList, position -> {
-
+            switch (position) {
+                case DEVICES:
+                    fragmentListener.openDevices();
+                    break;
+                case HISTORY:
+                    break;
+            }
         });
 
         binding.recycler.setLayoutManager(new GridLayoutManager(mContext, 2));

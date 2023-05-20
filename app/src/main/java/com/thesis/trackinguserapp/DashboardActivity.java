@@ -79,4 +79,10 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void openDevices() {
+        Intent intent = new Intent(DashboardActivity.this, DevicesActivity.class);
+        startActivity(intent);
+    }
 }

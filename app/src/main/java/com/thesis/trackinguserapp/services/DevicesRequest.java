@@ -80,4 +80,17 @@ public class DevicesRequest {
                     listener.onError();
                 });
     }
+
+    public void deleteDevice(String docID, FirebaseListener listener) {
+        db.collection("devices")
+                .document(docID)
+                .delete()
+                .addOnSuccessListener(unused -> listener.onSuccessAny(null))
+                .addOnFailureListener(e -> {
+                    if (e != null) {
+                        Log.e("DELETE_DEVICE_ERR", e.getLocalizedMessage());
+                    }
+                    listener.onError();
+                });
+    }
 }

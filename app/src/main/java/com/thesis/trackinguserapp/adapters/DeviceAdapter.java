@@ -40,6 +40,10 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         holder.txtDeviceID.setText(String.format("Device ID - %s", devices.getDeviceID()));
         holder.txtDeviceUserID.setText(String.format("User ID - %s", devices.getDeviceUserID()));
         holder.itemView.setOnClickListener(v -> listener.onClick(holder.getAdapterPosition()));
+        holder.itemView.setOnLongClickListener(v -> {
+            listener.onLongClick(holder.getAdapterPosition());
+            return true;
+        });
     }
 
     @Override
