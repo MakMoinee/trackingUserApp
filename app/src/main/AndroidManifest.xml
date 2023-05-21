@@ -47,6 +47,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 
+        <activity
+            android:name=".DependentsActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Material3.DayNight" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAIcV9PGZBA3mJZFlmJ0CQ_hk3Xyi0AGig" />
