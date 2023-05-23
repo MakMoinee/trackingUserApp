@@ -53,6 +53,12 @@
             android:parentActivityName=".DashboardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Material3.DayNight" />
+        <activity
+            android:name=".TrackActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Material3.DayNight" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

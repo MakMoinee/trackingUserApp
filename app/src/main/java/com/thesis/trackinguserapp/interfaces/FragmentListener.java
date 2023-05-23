@@ -10,4 +10,12 @@ public interface FragmentListener {
     default void openDevices() {
 
     }
+
+    default void openDependents(){
+
+    }
+
+    default void openTracking(){
+
+    }
 }

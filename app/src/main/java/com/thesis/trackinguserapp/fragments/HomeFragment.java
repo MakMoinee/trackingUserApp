@@ -33,6 +33,8 @@ public class HomeFragment extends Fragment {
 
     final int DEVICES = 0;
     final int HISTORY = 1;
+    final int DEPENDENTS = 2;
+    final int TRACKING = 3;
 
 
     public HomeFragment(Context mContext, FragmentListener fragmentListener) {
@@ -60,6 +62,11 @@ public class HomeFragment extends Fragment {
         options.setImageResourceID(R.drawable.history);
         optionsList.add(options);
 
+        options = new Options();
+        options.setTitle("Dependents");
+        options.setImageResourceID(R.drawable.dependent);
+        optionsList.add(options);
+
         adapter = new OptionsAdapter(mContext, optionsList, position -> {
             switch (position) {
                 case DEVICES:
@@ -67,6 +74,12 @@ public class HomeFragment extends Fragment {
                     break;
                 case HISTORY:
                     break;
+                case DEPENDENTS:
+                    fragmentListener.openDependents();
+                    break;
+                case TRACKING:
+                    break;
+
             }
         });
 

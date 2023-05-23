@@ -85,4 +85,16 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
         Intent intent = new Intent(DashboardActivity.this, DevicesActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void openDependents() {
+        Intent intent = new Intent(DashboardActivity.this, DependentsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void openTracking() {
+        Intent intent = new Intent(DashboardActivity.this, TrackActivity.class);
+        startActivity(intent);
+    }
 }
