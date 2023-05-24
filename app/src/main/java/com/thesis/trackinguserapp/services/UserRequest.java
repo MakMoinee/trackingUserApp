@@ -64,12 +64,9 @@ public class UserRequest {
         fs.collection("users")
                 .document(id)
                 .set(params, SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        users.setDocID(id);
-                        listener.onSuccessUser(users);
-                    }
+                .addOnSuccessListener(unused -> {
+                    users.setDocID(id);
+                    listener.onSuccessUser(users);
                 })
                 .addOnFailureListener(e -> {
                     if (e != null) {

@@ -30,8 +30,9 @@ public class DevicesRequest {
     }
 
 
-    public void getDevices(FirebaseListener listener) {
+    public void getDevices(String userID,FirebaseListener listener) {
         db.collection("devices")
+                .whereEqualTo("userID",userID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

@@ -49,6 +49,10 @@ public class DevicesActivity extends AppCompatActivity {
     }
 
     private void showAddDeviceDialog() {
+        if (devicesList.size() > 1) {
+            Toast.makeText(DevicesActivity.this, "You can add only one device", Toast.LENGTH_SHORT).show();
+            return;
+        }
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(DevicesActivity.this);
         addDeviceBinding = DialogAddDeviceBinding.inflate(getLayoutInflater(), null, false);
         setDialogListeners();
@@ -68,7 +72,7 @@ public class DevicesActivity extends AppCompatActivity {
                 addDeviceBinding.btnSave.setEnabled(false);
                 Users users = new MyUserPref(DevicesActivity.this).getUsers();
                 Devices devices = new Devices.DeviceBuilder()
-                        .setDeviceID(Integer.parseInt(deviceID))
+                        .setDeviceID(Float.parseFloat(deviceID))
                         .setDeviceUserID(Integer.parseInt(deviceUserID))
                         .setUserID(users.getDocID())
                         .build();
@@ -93,7 +97,8 @@ public class DevicesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        request.getDevices(new FirebaseListener() {
+        Users users = new MyUserPref(DevicesActivity.this).getUsers();
+        request.getDevices(users.getDocID(), new FirebaseListener() {
             @Override
             public <T> void onSuccessAny(T any) {
                 if (any instanceof List<?>) {

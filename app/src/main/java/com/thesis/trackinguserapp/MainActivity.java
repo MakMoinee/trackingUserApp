@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, GoogleSignInActivity.class);
             startActivity(intent);
         });
+
+        binding.btnCreateAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateAccountActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

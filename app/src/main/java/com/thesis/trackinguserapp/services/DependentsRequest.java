@@ -9,11 +9,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.thesis.trackinguserapp.common.MapForm;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
 import com.thesis.trackinguserapp.models.Dependents;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DependentsRequest {
 
@@ -61,7 +63,19 @@ public class DependentsRequest {
     }
 
     public void insertDependent(Dependents dependents, FirebaseListener listener) {
+        Map<String, Object> params = MapForm.getDependentMap(dependents);
+        String id = fs.collection("dependents")
+                .document().getId();
 
+        fs.collection("dependents")
+                .document(id)
+                .set(params)
+                .addOnSuccessListener(unused -> listener.onSuccessAny(null))
+                .addOnFailureListener(e -> {
+                    if (e != null)
+                        Log.e("ADD_DEPENDENT_ERR", e.getLocalizedMessage());
+                    listener.onError();
+                });
     }
 
     public void deleteDependent(String docID, FirebaseListener listener) {

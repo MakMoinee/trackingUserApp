@@ -67,6 +67,11 @@ public class HomeFragment extends Fragment {
         options.setImageResourceID(R.drawable.dependent);
         optionsList.add(options);
 
+        options = new Options();
+        options.setTitle("Tracking");
+        options.setImageResourceID(R.drawable.tracking);
+        optionsList.add(options);
+
         adapter = new OptionsAdapter(mContext, optionsList, position -> {
             switch (position) {
                 case DEVICES:
@@ -78,6 +83,7 @@ public class HomeFragment extends Fragment {
                     fragmentListener.openDependents();
                     break;
                 case TRACKING:
+                    fragmentListener.openTracking();
                     break;
 
             }

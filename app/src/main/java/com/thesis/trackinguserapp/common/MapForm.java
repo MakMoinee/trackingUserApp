@@ -1,5 +1,6 @@
 package com.thesis.trackinguserapp.common;
 
+import com.thesis.trackinguserapp.models.Dependents;
 import com.thesis.trackinguserapp.models.Devices;
 import com.thesis.trackinguserapp.models.Users;
 
@@ -24,6 +25,16 @@ public class MapForm {
         params.put("deviceUserID", devices.getDeviceUserID());
         params.put("userID", devices.getUserID());
         params.put("dateCreated", devices.getDateCreated());
+
+        return params;
+    }
+
+    public static Map<String, Object> getDependentMap(Dependents dependents){
+        Map<String, Object> params = new HashMap<>();
+        params.put("dependentName", dependents.getDependentName());
+        params.put("userID", dependents.getUserID());
+        params.put("dependentEmail", dependents.getDependentEmail());
+        params.put("dependentPhoneNumber", dependents.getDependentPhoneNumber());
 
         return params;
     }

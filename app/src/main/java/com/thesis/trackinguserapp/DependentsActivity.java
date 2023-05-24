@@ -42,6 +42,7 @@ public class DependentsActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setTitle("Dependents");
         customProgress = new CustomProgress(DependentsActivity.this);
+        customProgress.setDialog();
         pdLoading = customProgress.getDialog();
         setListeners();
         loadData();
