@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.thesis.trackinguserapp.adapters.DeviceAdapter;
+import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.databinding.ActivityDevicesBinding;
 import com.thesis.trackinguserapp.databinding.DialogAddDeviceBinding;
 import com.thesis.trackinguserapp.interfaces.AdapterListener;
@@ -72,7 +73,7 @@ public class DevicesActivity extends AppCompatActivity {
                 addDeviceBinding.btnSave.setEnabled(false);
                 Users users = new MyUserPref(DevicesActivity.this).getUsers();
                 Devices devices = new Devices.DeviceBuilder()
-                        .setDeviceID(Float.parseFloat(deviceID))
+                        .setDeviceID(deviceID)
                         .setDeviceUserID(Integer.parseInt(deviceUserID))
                         .setUserID(users.getDocID())
                         .build();
@@ -80,6 +81,7 @@ public class DevicesActivity extends AppCompatActivity {
                     @Override
                     public <T> void onSuccessAny(T any) {
                         addDeviceBinding.btnSave.setEnabled(true);
+                        Common.currentDeviceID = deviceID;
                         Toast.makeText(DevicesActivity.this, "Successfully Added Device", Toast.LENGTH_SHORT).show();
                         addDeviceDialog.dismiss();
                         binding.recycler.setAdapter(null);

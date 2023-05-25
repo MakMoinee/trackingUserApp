@@ -9,10 +9,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.databinding.ActivityDashboardBinding;
 import com.thesis.trackinguserapp.fragments.HomeFragment;
 import com.thesis.trackinguserapp.fragments.SettingsFragment;
+import com.thesis.trackinguserapp.interfaces.FirebaseListener;
 import com.thesis.trackinguserapp.interfaces.FragmentListener;
+import com.thesis.trackinguserapp.models.Devices;
+import com.thesis.trackinguserapp.models.Users;
+import com.thesis.trackinguserapp.persistence.MyUserPref;
+import com.thesis.trackinguserapp.services.DevicesRequest;
+
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity implements FragmentListener {
 
@@ -20,6 +28,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
     Fragment fragment;
     FragmentTransaction ft;
     FragmentManager fm;
+    DevicesRequest request;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,8 +36,32 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        request = new DevicesRequest(DashboardActivity.this);
         setListeners();
         onHomeClick();
+        loadDevices();
+    }
+
+    private void loadDevices() {
+        Users users = new MyUserPref(DashboardActivity.this).getUsers();
+        request.getDevices(users.getDocID(), new FirebaseListener() {
+            @Override
+            public <T> void onSuccessAny(T any) {
+                if (any instanceof List<?>) {
+                    List<?> tmpList = (List<?>) any;
+                    if (tmpList.size() > 0) {
+                        List<Devices> devicesList = (List<Devices>) tmpList;
+                        Devices devices = devicesList.get(0);
+                        Common.currentDeviceID = devices.getDeviceID();
+                    }
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     private void setListeners() {

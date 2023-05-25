@@ -6,7 +6,7 @@ import lombok.Data;
 public class Devices {
     private String docID;
     private String userID;
-    private float deviceID;
+    private String deviceID;
     private int deviceUserID;
     private String dateCreated;
 
@@ -25,7 +25,7 @@ public class Devices {
     public static class DeviceBuilder {
         private String docID;
         private String userID;
-        private float deviceID;
+        private String deviceID;
         private int deviceUserID;
         private String dateCreated;
 
@@ -42,7 +42,7 @@ public class Devices {
             return this;
         }
 
-        public DeviceBuilder setDeviceID(float deviceID) {
+        public DeviceBuilder setDeviceID(String deviceID) {
             this.deviceID = deviceID;
             return this;
         }
