@@ -16,9 +16,12 @@ import com.thesis.trackinguserapp.databinding.ActivityDevicesBinding;
 import com.thesis.trackinguserapp.databinding.DialogAddDeviceBinding;
 import com.thesis.trackinguserapp.interfaces.AdapterListener;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
+import com.thesis.trackinguserapp.models.DT;
+import com.thesis.trackinguserapp.models.DeviceToken;
 import com.thesis.trackinguserapp.models.Devices;
 import com.thesis.trackinguserapp.models.Users;
 import com.thesis.trackinguserapp.persistence.MyUserPref;
+import com.thesis.trackinguserapp.services.DeviceTokenRequest;
 import com.thesis.trackinguserapp.services.DevicesRequest;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class DevicesActivity extends AppCompatActivity {
     DeviceAdapter adapter;
     DialogAddDeviceBinding addDeviceBinding;
     AlertDialog addDeviceDialog;
+    DeviceTokenRequest deviceTokenRequest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class DevicesActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         request = new DevicesRequest(DevicesActivity.this);
+        deviceTokenRequest = new DeviceTokenRequest();
         setTitle("Devices");
         loadData();
         setListeners();
@@ -107,6 +112,9 @@ public class DevicesActivity extends AppCompatActivity {
                     List<?> tmpList = (List<?>) any;
                     if (tmpList.size() > 0) {
                         devicesList = (List<Devices>) tmpList;
+                        if(devicesList.size()>0){
+                            createTokens(devicesList);
+                        }
                         adapter = new DeviceAdapter(DevicesActivity.this, devicesList, new AdapterListener() {
                             @Override
                             public void onClick(int position) {
@@ -129,6 +137,31 @@ public class DevicesActivity extends AppCompatActivity {
             @Override
             public void onError() {
                 Toast.makeText(DevicesActivity.this, "There are no devices added", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createTokens(List<Devices> d) {
+        Devices devices = d.get(0);
+        Common.currentDeviceID = devices.getDeviceID();
+        DeviceToken deviceToken = new DeviceToken.DeviceTokenBuilder()
+                .setDeviceToken(Common.deviceToken)
+                .build();
+        List<DeviceToken> deviceTokenList = new ArrayList<>();
+        deviceTokenList.add(deviceToken);
+        DT dt = new DT();
+        dt.setDeviceID(devices.getDeviceID());
+        dt.setDeviceTokenList(deviceTokenList);
+        deviceTokenRequest.createDeviceToken(dt, new FirebaseListener() {
+
+            @Override
+            public <T> void onSuccessAny(T any) {
+
+            }
+
+            @Override
+            public void onError() {
+
             }
         });
     }

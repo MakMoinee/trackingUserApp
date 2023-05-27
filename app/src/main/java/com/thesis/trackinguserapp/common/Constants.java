@@ -17,4 +17,5 @@ public class Constants {
     public static final String welcomeEmailSubject = "Welcome to Tracking User App";
 
     public static final String termsAndConditionURL = "https://www.app-privacy-policy.com/live.php?token=gPM0Pf2NMlBnxJNh1S19Ffo5cDD7TTwI";
+
 }

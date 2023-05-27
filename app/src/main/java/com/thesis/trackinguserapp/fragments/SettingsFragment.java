@@ -89,8 +89,7 @@ public class SettingsFragment extends Fragment {
         DialogInterface.OnClickListener dListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_NEGATIVE:
-                    new MyUserPref(mContext).storeLogin(new Users());
-                    FirebaseAuth.getInstance().signOut();
+
                     fragmentListener.exitApp();
                     break;
                 default:

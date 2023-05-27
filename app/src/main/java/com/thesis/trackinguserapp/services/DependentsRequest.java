@@ -26,8 +26,9 @@ public class DependentsRequest {
     }
 
 
-    public void getDependents(FirebaseListener listener) {
+    public void getDependents(String userID, FirebaseListener listener) {
         fs.collection("dependents")
+                .whereEqualTo("userID", userID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -62,6 +63,7 @@ public class DependentsRequest {
                 });
     }
 
+
     public void insertDependent(Dependents dependents, FirebaseListener listener) {
         Map<String, Object> params = MapForm.getDependentMap(dependents);
         String id = fs.collection("dependents")
@@ -77,6 +79,7 @@ public class DependentsRequest {
                     listener.onError();
                 });
     }
+
 
     public void deleteDependent(String docID, FirebaseListener listener) {
         fs.collection("dependents")

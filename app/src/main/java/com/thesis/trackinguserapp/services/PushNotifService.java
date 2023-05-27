@@ -14,33 +14,26 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.thesis.trackinguserapp.MainActivity;
 import com.thesis.trackinguserapp.R;
 import com.thesis.trackinguserapp.TrackActivity;
 import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
+import com.thesis.trackinguserapp.models.Dependents;
 import com.thesis.trackinguserapp.models.DeviceToken;
+import com.thesis.trackinguserapp.models.Users;
+import com.thesis.trackinguserapp.persistence.DeviceTokenPref;
+import com.thesis.trackinguserapp.persistence.MyUserPref;
+
+import java.util.List;
 
 public class PushNotifService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "MyNotificationChannel";
-    DeviceTokenRequest request = new DeviceTokenRequest();
 
     @Override
     public void onNewToken(@NonNull String token) {
-        DeviceToken dt = new DeviceToken.DeviceTokenBuilder()
-                .setDocID("KkKENNeNbCT4NMoawCCo")
-                .setDeviceToken(token)
-                .build();
-        request.createDeviceToken(dt, new FirebaseListener() {
-            @Override
-            public <T> void onSuccessAny(T any) {
-                Log.e("SAVE_TOKEN","SUCCESS");
-            }
-
-            @Override
-            public void onError() {
-                Log.e("SAVE_TOKEN","FAIL");
-            }
-        });
+        Common.deviceToken = token;
+        new DeviceTokenPref(this).storeToken(token);
     }
 
     @Override
@@ -49,8 +42,9 @@ public class PushNotifService extends FirebaseMessagingService {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
 
-            // Display notification
             showNotification(title, body);
+
+
         }
     }
 

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.databinding.ActivityMainBinding;
 import com.thesis.trackinguserapp.models.Users;
+import com.thesis.trackinguserapp.persistence.DeviceTokenPref;
 import com.thesis.trackinguserapp.persistence.MyUserPref;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setViews() {
+        if (Common.deviceToken.equals("")) {
+            Common.deviceToken = new DeviceTokenPref(MainActivity.this).getToken();
+        }
         Users users = new MyUserPref(MainActivity.this).getUsers();
         if (users != null) {
             if (users.getDocID() != null) {

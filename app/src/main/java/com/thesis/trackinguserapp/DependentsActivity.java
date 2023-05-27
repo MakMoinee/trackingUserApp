@@ -49,8 +49,9 @@ public class DependentsActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        Users users = new MyUserPref(DependentsActivity.this).getUsers();
         request = new DependentsRequest();
-        request.getDependents(new FirebaseListener() {
+        request.getDependents(users.getDocID(), new FirebaseListener() {
             @Override
             public <T> void onSuccessAny(T any) {
                 if (any instanceof List<?>) {

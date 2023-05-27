@@ -2,6 +2,7 @@ package com.thesis.trackinguserapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,17 +10,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.databinding.ActivityDashboardBinding;
 import com.thesis.trackinguserapp.fragments.HomeFragment;
 import com.thesis.trackinguserapp.fragments.SettingsFragment;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
 import com.thesis.trackinguserapp.interfaces.FragmentListener;
+import com.thesis.trackinguserapp.models.DT;
+import com.thesis.trackinguserapp.models.DeviceToken;
 import com.thesis.trackinguserapp.models.Devices;
 import com.thesis.trackinguserapp.models.Users;
 import com.thesis.trackinguserapp.persistence.MyUserPref;
+import com.thesis.trackinguserapp.services.DeviceTokenRequest;
 import com.thesis.trackinguserapp.services.DevicesRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity implements FragmentListener {
@@ -29,6 +35,8 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
     FragmentTransaction ft;
     FragmentManager fm;
     DevicesRequest request;
+    DeviceTokenRequest deviceTokenRequest;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
         setContentView(binding.getRoot());
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         request = new DevicesRequest(DashboardActivity.this);
+        deviceTokenRequest = new DeviceTokenRequest();
         setListeners();
         onHomeClick();
         loadDevices();
@@ -53,6 +62,26 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
                         List<Devices> devicesList = (List<Devices>) tmpList;
                         Devices devices = devicesList.get(0);
                         Common.currentDeviceID = devices.getDeviceID();
+                        DeviceToken deviceToken = new DeviceToken.DeviceTokenBuilder()
+                                .setDeviceToken(Common.deviceToken)
+                                .build();
+                        List<DeviceToken> deviceTokenList = new ArrayList<>();
+                        deviceTokenList.add(deviceToken);
+                        DT dt = new DT();
+                        dt.setDeviceID(devices.getDeviceID());
+                        dt.setDeviceTokenList(deviceTokenList);
+                        deviceTokenRequest.createDeviceToken(dt, new FirebaseListener() {
+
+                            @Override
+                            public <T> void onSuccessAny(T any) {
+
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
                     }
                 }
             }
@@ -108,9 +137,24 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
 
     @Override
     public void exitApp() {
-        Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        DT dt = new DT();
+        dt.setDeviceID(Common.currentDeviceID);
+        deviceTokenRequest.deleteOldTokens(dt, new FirebaseListener() {
+            @Override
+            public <T> void onSuccessAny(T any) {
+                new MyUserPref(DashboardActivity.this).storeLogin(new Users());
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(DashboardActivity.this, "Failed to log out", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

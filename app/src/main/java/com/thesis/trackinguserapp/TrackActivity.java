@@ -35,10 +35,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.thesis.trackinguserapp.common.Common;
 import com.thesis.trackinguserapp.databinding.ActivityTrackingBinding;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
+import com.thesis.trackinguserapp.models.Dependents;
 import com.thesis.trackinguserapp.models.Devices;
 import com.thesis.trackinguserapp.models.TrackDevice;
 import com.thesis.trackinguserapp.models.Users;
 import com.thesis.trackinguserapp.persistence.MyUserPref;
+import com.thesis.trackinguserapp.services.DependentsRequest;
 import com.thesis.trackinguserapp.services.DevicesRequest;
 import com.thesis.trackinguserapp.services.realtime.RDBDeviceRequest;
 
@@ -58,6 +60,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     Devices associatedDevice = new Devices();
     LatLng deviceLocation;
     Marker deviceMarker;
+    DependentsRequest dependentsRequest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         devicesRequest = new DevicesRequest(TrackActivity.this);
+        dependentsRequest = new DependentsRequest();
         rdbDeviceRequest = new RDBDeviceRequest();
         getLocationPermission();
 
@@ -169,27 +173,8 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (tmpList.size() > 0) {
                         List<Devices> devicesList = (List<Devices>) tmpList;
                         associatedDevice = devicesList.get(0);
-                        rdbDeviceRequest.getReference("devices").child(associatedDevice.getDeviceID())
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        TrackDevice trackDevice = snapshot.getValue(TrackDevice.class);
-                                        if (trackDevice != null) {
-                                            deviceLocation = new LatLng(trackDevice.getLatitude(), trackDevice.getLongitude());
-                                            if (deviceMarker != null) deviceMarker.remove();
-                                            deviceMarker = mMap.addMarker(new MarkerOptions()
-                                                    .position(deviceLocation)
-                                                    .title(String.format("Device Location (%s)", Common.getRightStatus(trackDevice.getStatus())))
-                                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 15));
-                                        }
-                                    }
+                        addValueEvent("Device Location");
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
 
                     }
                 }
@@ -200,6 +185,31 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                 Toast.makeText(TrackActivity.this, "There is no device associated to you", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void addValueEvent(String name) {
+        rdbDeviceRequest.getReference("devices").child(associatedDevice.getDeviceID())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        TrackDevice trackDevice = snapshot.getValue(TrackDevice.class);
+                        if (trackDevice != null) {
+                            deviceLocation = new LatLng(trackDevice.getLatitude(), trackDevice.getLongitude());
+                            if (deviceMarker != null) deviceMarker.remove();
+                            String status = Common.getRightStatus(trackDevice.getStatus());
+                            deviceMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(deviceLocation)
+                                    .title(String.format("%s (%s)", name, status))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 15));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     @Override
