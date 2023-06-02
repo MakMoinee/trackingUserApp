@@ -36,15 +36,20 @@ public class UserRequest {
                     if (queryDocumentSnapshots.isEmpty()) {
                         listener.onError();
                     } else {
-                        List<Users> usersList = new ArrayList<>();
                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             if (documentSnapshot.exists()) {
                                 Users u = documentSnapshot.toObject(Users.class);
                                 if (u != null) {
-                                    u.setDocID(documentSnapshot.getId());
-                                    listener.onSuccessUser(u);
-                                    break;
-                                }else{
+                                    if (u.getPassword().equals(users.getPassword())) {
+                                        u.setDocID(documentSnapshot.getId());
+                                        listener.onSuccessUser(u);
+                                        break;
+                                    } else {
+                                        listener.onError();
+                                        break;
+                                    }
+
+                                } else {
                                     listener.onError();
                                     break;
                                 }
@@ -57,23 +62,35 @@ public class UserRequest {
     }
 
     public void createUserAccount(Users users, FirebaseListener listener) {
-        String id = fs.collection("users")
-                .document().getId();
-        Map<String, Object> params = MapForm.getUserMap(users);
 
-        fs.collection("users")
-                .document(id)
-                .set(params, SetOptions.merge())
-                .addOnSuccessListener(unused -> {
-                    users.setDocID(id);
-                    listener.onSuccessUser(users);
-                })
-                .addOnFailureListener(e -> {
-                    if (e != null) {
-                        Log.e("ERROR_CREATE_ACCOUNT", e.getLocalizedMessage());
-                    }
-                    listener.onError();
-                });
+        getLogin(users, new FirebaseListener() {
+            @Override
+            public <T> void onSuccessAny(T any) {
+                listener.onError();
+            }
+
+            @Override
+            public void onError() {
+                String id = fs.collection("users")
+                        .document().getId();
+                Map<String, Object> params = MapForm.getUserMap(users);
+
+                fs.collection("users")
+                        .document(id)
+                        .set(params, SetOptions.merge())
+                        .addOnSuccessListener(unused -> {
+                            users.setDocID(id);
+                            listener.onSuccessUser(users);
+                        })
+                        .addOnFailureListener(e -> {
+                            if (e != null) {
+                                Log.e("ERROR_CREATE_ACCOUNT", e.getLocalizedMessage());
+                            }
+                            listener.onError();
+                        });
+            }
+        });
+
     }
 }
 

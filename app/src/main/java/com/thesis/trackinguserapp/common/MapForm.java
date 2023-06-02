@@ -52,7 +52,7 @@ public class MapForm {
     public static Map<String, Object> getDeviceTokenMap(DeviceToken deviceToken) {
         Map<String, Object> params = new HashMap<>();
         params.put("deviceToken", deviceToken.getDeviceToken());
-
+        params.put("userID", deviceToken.getUserID());
         return params;
     }
 }

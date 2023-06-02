@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
                     fragmentListener.openDevices();
                     break;
                 case HISTORY:
+                    fragmentListener.openHistory();
                     break;
                 case DEPENDENTS:
                     fragmentListener.openDependents();

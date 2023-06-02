@@ -63,9 +63,21 @@ public class DeviceTokenRequest {
                             Log.e("createDeviceToken", "existing no need to update document");
                             listener.onSuccessAny(null); // existing no need to update document
                         }
+                    }else{
+                        docRef.set(finalParam, SetOptions.merge())
+                                .addOnSuccessListener(unused -> listener.onSuccessAny(null))
+                                .addOnFailureListener(e2 -> {
+                                    if (e2 != null) {
+                                        Log.e("createDeviceToken_ERR", e2.getLocalizedMessage());
+                                    }
+                                    listener.onError();
+                                });
                     }
                 })
                 .addOnFailureListener(e -> {
+                    if (e != null) {
+                        Log.e("createDeviceToken_ERR", e.getLocalizedMessage());
+                    }
                     docRef.set(finalParam, SetOptions.merge())
                             .addOnSuccessListener(unused -> listener.onSuccessAny(null))
                             .addOnFailureListener(e2 -> {

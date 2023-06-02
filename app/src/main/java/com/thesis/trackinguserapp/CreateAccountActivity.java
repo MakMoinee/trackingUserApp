@@ -5,17 +5,24 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.thesis.trackinguserapp.common.Constants;
 import com.thesis.trackinguserapp.databinding.ActivityCreateAccountBinding;
+import com.thesis.trackinguserapp.dialogs.CustomProgress;
 import com.thesis.trackinguserapp.interfaces.FirebaseListener;
 import com.thesis.trackinguserapp.models.Users;
+import com.thesis.trackinguserapp.services.LocalEmail;
 import com.thesis.trackinguserapp.services.UserRequest;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
     ActivityCreateAccountBinding binding;
     UserRequest userRequest;
+    LocalEmail localEmail;
+    CustomProgress progress;
+    AlertDialog pdLoad;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +31,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         userRequest = new UserRequest(CreateAccountActivity.this);
+        localEmail = new LocalEmail(CreateAccountActivity.this);
+        progress = new CustomProgress(CreateAccountActivity.this);
+        progress.setDialog();
+        pdLoad = progress.getDialog();
         setListeners();
     }
 
@@ -39,6 +50,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 Toast.makeText(CreateAccountActivity.this, "Please Don't Leave Empty Fields", Toast.LENGTH_SHORT).show();
             } else {
                 if (password.equals(confirmPassword)) {
+                    pdLoad.show();
                     Users users = new Users.UserBuilder()
                             .setFirstName(firstName)
                             .setMiddleName(middleName)
@@ -48,12 +60,16 @@ public class CreateAccountActivity extends AppCompatActivity {
                             .build();
                     userRequest.createUserAccount(users, new FirebaseListener() {
                         @Override
-                        public <T> void onSuccessAny(T any) {
-                            FirebaseListener.super.onSuccessAny(any);
+                        public void onSuccessUser(Users u) {
+                            pdLoad.dismiss();
+                            localEmail.sendEmail(email, Constants.welcomeEmailSubject, String.format(Constants.welcomeEmail, firstName, Constants.emailAdd));
+                            Toast.makeText(CreateAccountActivity.this, "Successfully Created Account", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
 
                         @Override
                         public void onError() {
+                            pdLoad.dismiss();
                             Toast.makeText(CreateAccountActivity.this, "Failed to create account, Please Try Again Later", Toast.LENGTH_SHORT).show();
                         }
                     });

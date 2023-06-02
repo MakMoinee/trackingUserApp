@@ -2,6 +2,7 @@ package com.thesis.trackinguserapp;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -112,7 +113,7 @@ public class DevicesActivity extends AppCompatActivity {
                     List<?> tmpList = (List<?>) any;
                     if (tmpList.size() > 0) {
                         devicesList = (List<Devices>) tmpList;
-                        if(devicesList.size()>0){
+                        if (devicesList.size() > 0) {
                             createTokens(devicesList);
                         }
                         adapter = new DeviceAdapter(DevicesActivity.this, devicesList, new AdapterListener() {
@@ -142,10 +143,12 @@ public class DevicesActivity extends AppCompatActivity {
     }
 
     private void createTokens(List<Devices> d) {
+        Users users = new MyUserPref(DevicesActivity.this).getUsers();
         Devices devices = d.get(0);
         Common.currentDeviceID = devices.getDeviceID();
         DeviceToken deviceToken = new DeviceToken.DeviceTokenBuilder()
                 .setDeviceToken(Common.deviceToken)
+                .setUserID(users.getDocID())
                 .build();
         List<DeviceToken> deviceTokenList = new ArrayList<>();
         deviceTokenList.add(deviceToken);
@@ -156,12 +159,12 @@ public class DevicesActivity extends AppCompatActivity {
 
             @Override
             public <T> void onSuccessAny(T any) {
-
+                Log.e("DEVICE_CREATE_TOKEN", "success");
             }
 
             @Override
             public void onError() {
-
+                Log.e("DEVICE_CREATE_TOKENERR", "error creating token");
             }
         });
     }

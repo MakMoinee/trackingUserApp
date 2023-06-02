@@ -67,6 +67,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="true"
+            android:parentActivityName=".HistoryActivity"
+            android:theme="@style/Theme.Material3.DayNight" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAIcV9PGZBA3mJZFlmJ0CQ_hk3Xyi0AGig" />

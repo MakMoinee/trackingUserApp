@@ -2,6 +2,7 @@ package com.thesis.trackinguserapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -56,30 +57,34 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
         request.getDevices(users.getDocID(), new FirebaseListener() {
             @Override
             public <T> void onSuccessAny(T any) {
+
                 if (any instanceof List<?>) {
                     List<?> tmpList = (List<?>) any;
                     if (tmpList.size() > 0) {
                         List<Devices> devicesList = (List<Devices>) tmpList;
                         Devices devices = devicesList.get(0);
+                        Log.e("HERE", devices.toString());
                         Common.currentDeviceID = devices.getDeviceID();
                         DeviceToken deviceToken = new DeviceToken.DeviceTokenBuilder()
                                 .setDeviceToken(Common.deviceToken)
+                                .setUserID(users.getDocID())
                                 .build();
                         List<DeviceToken> deviceTokenList = new ArrayList<>();
                         deviceTokenList.add(deviceToken);
                         DT dt = new DT();
                         dt.setDeviceID(devices.getDeviceID());
                         dt.setDeviceTokenList(deviceTokenList);
+                        deviceTokenRequest = new DeviceTokenRequest();
                         deviceTokenRequest.createDeviceToken(dt, new FirebaseListener() {
 
                             @Override
                             public <T> void onSuccessAny(T any) {
-
+                                Log.e("DEVICE_CREATE_TOKEN", "success");
                             }
 
                             @Override
                             public void onError() {
-
+                                Log.e("DEVICE_CREATE_TOKENERR", "error creating token");
                             }
                         });
                     }
@@ -88,7 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
 
             @Override
             public void onError() {
-
+                Log.e("getDevices_err", "empty devices");
             }
         });
     }
@@ -137,23 +142,42 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
 
     @Override
     public void exitApp() {
-        DT dt = new DT();
-        dt.setDeviceID(Common.currentDeviceID);
-        deviceTokenRequest.deleteOldTokens(dt, new FirebaseListener() {
-            @Override
-            public <T> void onSuccessAny(T any) {
+        try {
+            if (!Common.currentDeviceID.equals("")) {
+                DT dt = new DT();
+                dt.setDeviceID(Common.currentDeviceID);
+                deviceTokenRequest.deleteOldTokens(dt, new FirebaseListener() {
+                    @Override
+                    public <T> void onSuccessAny(T any) {
+                        new MyUserPref(DashboardActivity.this).storeLogin(new Users());
+                        FirebaseAuth.getInstance().signOut();
+                        Toast.makeText(DashboardActivity.this, "Successfully Logout", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(DashboardActivity.this, "Failed to log out", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
                 new MyUserPref(DashboardActivity.this).storeLogin(new Users());
                 FirebaseAuth.getInstance().signOut();
+                Toast.makeText(DashboardActivity.this, "Successfully Logout", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
-
-            @Override
-            public void onError() {
-                Toast.makeText(DashboardActivity.this, "Failed to log out", Toast.LENGTH_SHORT).show();
-            }
-        });
+        } catch (Exception e) {
+            new MyUserPref(DashboardActivity.this).storeLogin(new Users());
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(DashboardActivity.this, "Successfully Logout", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
     }
 
@@ -172,6 +196,12 @@ public class DashboardActivity extends AppCompatActivity implements FragmentList
     @Override
     public void openTracking() {
         Intent intent = new Intent(DashboardActivity.this, TrackActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void openHistory() {
+        Intent intent = new Intent(DashboardActivity.this, HistoryActivity.class);
         startActivity(intent);
     }
 }

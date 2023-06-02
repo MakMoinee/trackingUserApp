@@ -11,11 +11,15 @@ public interface FragmentListener {
 
     }
 
-    default void openDependents(){
+    default void openDependents() {
 
     }
 
-    default void openTracking(){
+    default void openTracking() {
+
+    }
+
+    default void openHistory() {
 
     }
 }
