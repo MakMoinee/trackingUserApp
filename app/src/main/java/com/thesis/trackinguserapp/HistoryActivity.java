@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.thesis.trackinguserapp.adapters.HistoryAdapter;
 import com.thesis.trackinguserapp.common.Common;
@@ -44,6 +45,15 @@ public class HistoryActivity extends AppCompatActivity {
         pbLoad = customProgress.getDialog();
         historyRequest = new HistoryRequest();
         loadHistory();
+        setListeners();
+    }
+
+    private void setListeners() {
+        binding.refresh.setOnRefreshListener(() -> {
+            binding.recycler.setAdapter(null);
+            loadHistory();
+            binding.refresh.setRefreshing(false);
+        });
     }
 
     private void loadHistory() {
@@ -75,6 +85,8 @@ public class HistoryActivity extends AppCompatActivity {
                         Toast.makeText(HistoryActivity.this, "There are no available history as of the moment", Toast.LENGTH_SHORT).show();
                     }
                 });
+            } else {
+                Toast.makeText(HistoryActivity.this, "There are no available history as of the moment", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
 

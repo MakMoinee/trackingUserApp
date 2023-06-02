@@ -73,6 +73,12 @@
             android:parentActivityName=".HistoryActivity"
             android:theme="@style/Theme.Material3.DayNight" />
 
+        <activity
+            android:name=".AboutUsActivity"
+            android:exported="true"
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@style/Theme.Material3.DayNight" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAIcV9PGZBA3mJZFlmJ0CQ_hk3Xyi0AGig" />

@@ -42,8 +42,9 @@ public class SettingsFragment extends Fragment {
     DialogTermsBinding termsBinding;
     AlertDialog termsDialog;
 
-    final int TERMS_AND_CONDITION = 0;
-    final int LOG_OUT = 1;
+    final int ABOUT_US = 0;
+    final int TERMS_AND_CONDITION = 1;
+    final int LOG_OUT = 2;
 
     public SettingsFragment(Context mContext, FragmentListener fragmentListener) {
         this.mContext = mContext;
@@ -61,6 +62,11 @@ public class SettingsFragment extends Fragment {
     private void setOptions() {
         optionsList = new ArrayList<>();
         Options options = new Options();
+        options.setTitle("About Us");
+        options.setImageResourceID(R.drawable.aboutus);
+        optionsList.add(options);
+
+        options = new Options();
         options.setTitle("Terms And Conditions");
         options.setImageResourceID(R.drawable.terms);
         optionsList.add(options);
@@ -72,6 +78,9 @@ public class SettingsFragment extends Fragment {
 
         adapter = new OptionsAdapter(mContext, optionsList, position -> {
             switch (position) {
+                case ABOUT_US:
+                    showAboutUs();
+                    break;
                 case TERMS_AND_CONDITION:
                     showTerms();
                     break;
@@ -82,6 +91,9 @@ public class SettingsFragment extends Fragment {
         });
         binding.recycler.setLayoutManager(new LinearLayoutManager(mContext));
         binding.recycler.setAdapter(adapter);
+    }
+
+    private void showAboutUs() {
     }
 
     private void showLogout() {
